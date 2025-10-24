@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { themes, ThemesType } from "@/providers/ThemeProvider";
 import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
@@ -20,13 +23,19 @@ export default function ThemeSwitch({ labeled }: { labeled?: boolean }) {
 
 function ThemeButton({ t, labeled }: { t: ThemesType; labeled?: boolean }) {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <Button
       variant="secondary"
       className={cn(
         "rounded-full p-1 size-8",
-        theme === t.mode && "bg-accent border-2",
+        mounted && theme === t.mode && "bg-accent border-2",
         labeled && "w-full flex items-center gap-2"
       )}
       onClick={() => setTheme(t.mode)}
