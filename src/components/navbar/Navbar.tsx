@@ -14,10 +14,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import ThemeSwitch from "./ThemeSwitch";
-import {
-  RegisterLink,
-  LoginLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 
 const navItems = [
   {
@@ -29,8 +25,8 @@ const navItems = [
     link: "/test",
   },
   {
-    name: "Contact",
-    link: "#contact",
+    name: "Wordle",
+    link: "/wordle",
   },
 ];
 
@@ -46,9 +42,7 @@ export function Navbar() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
             <ThemeSwitch />
-            {/* <NavbarButton variant="primary">Login</NavbarButton> */}
-            <LoginLink>Sign in</LoginLink>
-            <RegisterLink>Sign up</RegisterLink>
+            <NavbarButton variant="primary">Login</NavbarButton>
           </div>
         </NavBody>
 
@@ -78,15 +72,13 @@ export function Navbar() {
             ))}
             <div className="flex w-full flex-col gap-4">
               <ThemeSwitch labeled />
-              {/* <NavbarButton
+              <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
               >
                 Login
-              </NavbarButton> */}
-              <LoginLink>Sign in</LoginLink>
-              <RegisterLink>Sign up</RegisterLink>
+              </NavbarButton>
             </div>
           </MobileNavMenu>
         </MobileNav>

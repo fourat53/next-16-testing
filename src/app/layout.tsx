@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background text-foreground min-h-screen font-sans antialiased p-8 pt-30">
+      <body className="bg-background text-foreground min-h-screen font-sans antialiased p-8 pt-24">
         <ThemeProvider>
           <Navbar />
           {children}
