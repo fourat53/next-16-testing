@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { withAuth } from "@kinde-oss/kinde-auth-nextjs/middleware";
 
-export default function proxy() {
-  return NextResponse.next();
+export default function proxy(req: Request) {
+  return withAuth(req);
 }
 
 export const config = {
-  matcher: ["/"],
+  matcher: [
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+  ],
 };
