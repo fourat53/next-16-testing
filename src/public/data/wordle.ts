@@ -73,23 +73,6 @@ const ALPHABET: string[] = [
   "X",
   "Y",
   "Z",
-  // "",
 ];
 
-const getRandomWord = (): string => {
-  const randomIndex = Math.floor(Math.random() * FIVE_LETTER_WORDS.length);
-  return FIVE_LETTER_WORDS[randomIndex];
-};
-
-const getCellColor = (
-  col: number,
-  letter: string,
-  randomWord: string
-): string => {
-  if (!randomWord || letter === "") return "bg-background";
-  if (letter === randomWord[col]) return "bg-green-500 text-white";
-  if (randomWord.includes(letter)) return "bg-yellow-500 text-white";
-  return "bg-gray-500 text-white";
-};
-
-export { ALPHABET, getRandomWord, getCellColor };
+export { ALPHABET, FIVE_LETTER_WORDS };

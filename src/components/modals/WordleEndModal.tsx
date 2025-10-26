@@ -1,6 +1,7 @@
 import { Modal, ModalContent, ModalTitle } from "@/components/ui/modal";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { GridCell } from "@/app/wordle/page";
 
 export default function WordleEndModal({
   randomWord,
@@ -8,10 +9,10 @@ export default function WordleEndModal({
   setGridValues,
   setCurrentGridCell,
 }: {
-  randomWord: string | null;
+  randomWord: string;
   gridValues: string[][];
-  setGridValues: any;
-  setCurrentGridCell: any;
+  setGridValues: (grid: string[][]) => void;
+  setCurrentGridCell: (cell: GridCell) => void;
 }) {
   const winCondition = gridValues.some((row) => row.join("") === randomWord);
   const loseCondition = gridValues[9].every((val) => val !== "");
