@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { ALPHABET, FIVE_LETTER_WORDS } from "@/public/data/wordle";
+import { ALPHABET, getRandomWord } from "@/public/data/wordle";
 import WordleEndModal from "@/components/modals/WordleEndModal";
 
 export type GridCell = {
@@ -22,11 +22,26 @@ export default function wordle() {
   });
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * FIVE_LETTER_WORDS.length);
-    setRandomWord(FIVE_LETTER_WORDS[randomIndex]);
+    async function initializeWord() {
+      setRandomWord(await getRandomWord());
+    }
+    initializeWord();
   }, []);
 
-  const aphabetButtonClick = (letter: string) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toUpperCase();
+      if (ALPHABET.includes(key)) {
+        e.preventDefault();
+        aphabetButtonClick(key);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [gridValues]);
+
+  const aphabetButtonClick = (char: string) => {
     if (
       !gridValues[currentGridCell.row] ||
       gridValues[currentGridCell.row][currentGridCell.col] !== ""
@@ -35,7 +50,7 @@ export default function wordle() {
 
     setGridValues((prev) => {
       const newGrid = prev.map((row) => row.slice());
-      newGrid[currentGridCell.row][currentGridCell.col] = letter;
+      newGrid[currentGridCell.row][currentGridCell.col] = char;
       return newGrid;
     });
     setCurrentGridCell((prev) => {
@@ -51,52 +66,36 @@ export default function wordle() {
   };
 
   return (
-    <>
-      <h1 className="text-2xl text-center font-bold mb-4 md:mb-6">
-        Wordle Game {randomWord}
-      </h1>
-      <div className="w-full h-fit grid grid-cols-1 md:grid-cols-3 gap-4 items-center justify-center">
-        <div className="w-full md:col-span-2">
-          {Array.from({ length: 10 }).map((_, rowIndex) => (
-            <GridRow
-              key={rowIndex}
-              randomWord={randomWord}
-              rowIndex={rowIndex}
-              currentGridCell={currentGridCell}
-              setCurrentGridCell={setCurrentGridCell}
-              gridValues={gridValues}
-            />
-          ))}
-        </div>
-        <div className="h-fit w-full flex flex-wrap items-center justify-center gap-1">
-          {ALPHABET.map((letter, index) => (
-            <AlphabetButton
-              key={index}
-              letter={letter}
-              onClick={() => aphabetButtonClick(letter)}
-            />
-          ))}
-        </div>
+    <div className="w-full min-h-[calc(100vh-128px)] grid grid-cols-1 md:grid-cols-5 max-md:gap-4 items-center justify-center">
+      <div className="md:col-span-3 w-full h-full flex items-center justify-center">
+        <Grid
+          randomWord={randomWord}
+          gridValues={gridValues}
+          currentGridCell={currentGridCell}
+          setCurrentGridCell={setCurrentGridCell}
+        />
+      </div>
+      <div className="md:col-span-2 w-full h-full flex items-center justify-center">
+        <KeyboardSection onClick={aphabetButtonClick} />
       </div>
       <WordleEndModal
         randomWord={randomWord}
+        setRandomWord={setRandomWord}
         gridValues={gridValues}
         setGridValues={setGridValues}
         setCurrentGridCell={setCurrentGridCell}
       />
-    </>
+    </div>
   );
 }
 
-const GridRow = ({
+const Grid = ({
   randomWord,
-  rowIndex,
   currentGridCell,
   setCurrentGridCell,
   gridValues,
 }: {
   randomWord: string;
-  rowIndex: number;
   currentGridCell: GridCell;
   setCurrentGridCell: (cell: GridCell) => void;
   gridValues: string[][];
@@ -116,58 +115,60 @@ const GridRow = ({
   };
 
   return (
-    <div
-      key={rowIndex}
-      className="mx-auto w-fit grid grid-cols-5 gap-1 items-center justify-center"
-    >
-      {Array.from({ length: 5 }).map((_, colIndex) => (
-        <Button
-          key={colIndex}
-          variant="ghost"
-          disabled={
-            rowIndex >= 1 && gridValues[rowIndex - 1].some((val) => val === "")
-          }
-          onClick={() => {
-            setCurrentGridCell({ row: rowIndex, col: colIndex });
-          }}
-          className={cn(
-            "size-10 md:size-14 border-2 border-gray-500 mt-1 flex items-center justify-center text-2xl font-bold rounded",
-            currentGridCell.row === rowIndex &&
-              currentGridCell.col === colIndex &&
-              !gridValues[rowIndex][colIndex] &&
-              "animate-pulse duration-500 border-blue-500",
-            getCellColor({
-              letter: gridValues[rowIndex][colIndex],
-              col: colIndex,
-            })
-          )}
+    <div className="space-y-1">
+      {Array.from({ length: 10 }).map((_, rowIndex) => (
+        <div
+          key={rowIndex}
+          className="space-x-1 grid grid-cols-5 items-center justify-center"
         >
-          {gridValues[rowIndex][colIndex]}
-        </Button>
+          {Array.from({ length: 5 }).map((_, colIndex) => (
+            <Button
+              key={colIndex}
+              variant="ghost"
+              disabled={
+                rowIndex >= 1 &&
+                gridValues[rowIndex - 1].some((val) => val === "")
+              }
+              onClick={() => {
+                setCurrentGridCell({ row: rowIndex, col: colIndex });
+              }}
+              className={cn(
+                "size-10 md:size-16 border-2 border-gray-500 flex items-center justify-center text-2xl font-bold rounded",
+                currentGridCell.row === rowIndex &&
+                  currentGridCell.col === colIndex &&
+                  !gridValues[rowIndex][colIndex] &&
+                  "animate-pulse duration-500 border-blue-500",
+                getCellColor({
+                  letter: gridValues[rowIndex][colIndex],
+                  col: colIndex,
+                })
+              )}
+            >
+              {gridValues[rowIndex][colIndex]}
+            </Button>
+          ))}
+        </div>
       ))}
     </div>
   );
 };
 
-const AlphabetButton = ({
-  letter,
-  onClick,
-}: {
-  letter: string;
-  onClick: () => void;
-}) => {
+const KeyboardSection = ({ onClick }: { onClick: (char: string) => void }) => {
   return (
-    <Button
-      key={letter}
-      variant="customColor"
-      color="bg-gray-500"
-      onClick={onClick}
-      className={cn(
-        "size-9 md:size-14 border-2 border-gray-500 text-xl md:text-3xl font-bold",
-        letter === "" && "w-54"
-      )}
-    >
-      {letter}
-    </Button>
+    <div className="flex flex-wrap gap-1 md:gap-2 items-center justify-center">
+      {ALPHABET.map((letter, index) => (
+        <Button
+          key={index}
+          color="bg-gray-500"
+          onClick={() => onClick(letter)}
+          className={cn(
+            "size-9 md:size-14 border-2 border-gray-500 text-xl md:text-3xl font-bold",
+            letter === "" && "w-54"
+          )}
+        >
+          {letter}
+        </Button>
+      ))}
+    </div>
   );
 };

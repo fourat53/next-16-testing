@@ -15,10 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background text-foreground min-h-screen font-sans antialiased p-8 pt-24">
+      <body className="bg-background text-foreground antialiased">
         <ThemeProvider>
           <Navbar />
-          {children}
+          <div className="min-h-screen p-8 pt-24">{children}</div>
         </ThemeProvider>
       </body>
     </html>

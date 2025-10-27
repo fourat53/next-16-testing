@@ -1,78 +1,12 @@
-const FIVE_LETTER_WORDS: string[] = [
-  "APPLE",
-  "BRAVE",
-  "CARET",
-  "DANCE",
-  "EAGER",
-  "FAITH",
-  "GRACE",
-  "HAPPY",
-  "IDEAL",
-  "JOKER",
-  "KNIFE",
-  "LIGHT",
-  "MIGHT",
-  "NOBLE",
-  "OCEAN",
-  "PRIDE",
-  "QUICK",
-  "RIVER",
-  "SHINE",
-  "TRUST",
-  "UNITY",
-  "VIVID",
-  "WORTH",
-  "YOUTH",
-  "ZEBRA",
-  "ABIDE",
-  "BRAVE",
-  "CARET",
-  "DANCE",
-  "EAGER",
-  "FAITH",
-  "GRACE",
-  "HAPPY",
-  "IDEAL",
-  "JOKER",
-  "KNIFE",
-  "LIGHT",
-  "MIGHT",
-  "NOBLE",
-  "OCEAN",
-  "PRIDE",
-  "QUICK",
-  "RIVER",
-  "SHINE",
-  "TRUST",
-];
+const ALPHABET = Array.from({ length: 26 }, (_, i) =>
+  String.fromCharCode(65 + i)
+);
 
-const ALPHABET: string[] = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+async function getRandomWord(): Promise<string> {
+  const res = await fetch("https://api.datamuse.com/words?sp=?????&max=100");
+  const data = await res.json();
+  const words = data.map((obj: { word: string }) => obj.word.toUpperCase());
 
-export { ALPHABET, FIVE_LETTER_WORDS };
+  return words[Math.floor(Math.random() * words.length)];
+}
+export { ALPHABET, getRandomWord };

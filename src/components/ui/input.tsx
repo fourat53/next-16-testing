@@ -9,8 +9,8 @@ function Input({
   ...props
 }: React.ComponentProps<"input"> & { label?: string }) {
   return (
-    <div className="space-y-1">
-      <p className="font-semibold text-sm">{label}</p>
+    <div className="space-y-1.5">
+      <p className="pl-1 font-semibold text-sm">{label}</p>
       <input
         type={type}
         data-slot="input"
