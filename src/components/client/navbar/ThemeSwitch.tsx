@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { themes, ThemesType } from "@/providers/ThemeProvider";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,7 @@ function ThemeButton({ t, labeled }: { t: ThemesType; labeled?: boolean }) {
   return (
     <Button
       variant="secondary"
+      icon={t.icon}
       className={cn(
         "rounded-full p-1 size-8",
         mounted && theme === t.mode && "bg-accent border-2",
@@ -40,7 +41,7 @@ function ThemeButton({ t, labeled }: { t: ThemesType; labeled?: boolean }) {
       )}
       onClick={() => setTheme(t.mode)}
     >
-      {t.icon} {labeled && <span>{t.label}</span>}
+      {labeled && <span>{t.label}</span>}
     </Button>
   );
 }

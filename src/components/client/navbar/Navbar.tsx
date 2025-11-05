@@ -18,15 +18,19 @@ import ThemeSwitch from "./ThemeSwitch";
 const navItems = [
   {
     name: "Home",
-    link: "/",
+    link: "/client/home",
   },
   {
-    name: "Test",
-    link: "/test",
+    name: "Components",
+    link: "/client/components",
+  },
+  {
+    name: "Css Screens",
+    link: "/client/css-screens",
   },
   {
     name: "Wordle",
-    link: "/wordle",
+    link: "/client/wordle",
   },
 ];
 
@@ -35,7 +39,7 @@ export function Navbar() {
 
   return (
     <div className="relative w-full">
-      <DefaultNavbar className="bg-sidebar rounded-full w-[90%] max-w-7xl mx-auto">
+      <DefaultNavbar className="rounded-full w-[90%] max-w-7xl mx-auto">
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />

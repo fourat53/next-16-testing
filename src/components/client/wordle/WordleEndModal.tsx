@@ -1,7 +1,7 @@
 import { Modal, ModalContent, ModalTitle } from "@/components/ui/modal";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { cn } from "@/lib/utils";
-import { GridCell } from "@/app/wordle/page";
+import { GridCell } from "@/components/client/wordle/WordleGrid";
 import { getRandomWord } from "@/public/data/wordle";
 import { useEffect } from "react";
 

@@ -5,8 +5,13 @@ const config: Config = {
   theme: {
     extend: {
       screens: {},
-      scale: {},
       colors: {},
+      borderRadius: {
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
+        xl: "var(--radius-xl)",
+      },
     },
   },
   plugins: [],
